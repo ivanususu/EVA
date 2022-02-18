@@ -139,9 +139,11 @@ function encrypt_and_upload {
   ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key
   ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key
   echo "Making new git branch and pushing"
-  git switch -c "Variabler_new_branch"
-  git commit -am "Variabler commiting new env changes"
-  git push
+  read -p "Name your new git branch: " NEW_GIT_BRANCH
+  read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
+  git switch -c $NEW_GIT_BRANCH
+  git commit -am "$NEW_GIT_BRANCH_COMMENT"
+  git push --set-upstream origin $NEW_GIT_BRANCH
 }
 
 
