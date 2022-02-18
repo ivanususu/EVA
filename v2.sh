@@ -29,7 +29,8 @@ function init {
   cd /home/ivan/variabler
   echo "Initializing..."
   echo "Pulling latest from git"
-  git pull
+  git switch master
+  git pull origin master
   echo "Decrypting .env files"
   ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key
   ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key
@@ -144,6 +145,8 @@ function encrypt_and_upload {
   git switch -c $NEW_GIT_BRANCH
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
   git push --set-upstream origin $NEW_GIT_BRANCH
+  git switch master
+  main
 }
 
 
