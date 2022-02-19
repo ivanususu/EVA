@@ -93,8 +93,8 @@ function add_env {
 
 function add_env_test {
   read -p "Enter the new variable: " new_test_var
-  DATE=`date +%d-%m-%y`
-  new_test_git_branch=test_env_updated_${DATE}
+  DATETIME='date +%d-%m-%y-%H.%M.%S'
+  new_test_git_branch=test_env_updated_${DATETIME}
   echo "Making new git branch"
   git switch -c $new_test_git_branch
   echo $new_test_var >> ./env_test
@@ -147,7 +147,7 @@ function encrypt_and_upload {
   echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
-  git push --set-upstream origin $NEW_GIT_BRANCH
+  git push --set-upstream origin $new_test_git_branch
   git switch master
   main
 }
