@@ -30,7 +30,7 @@ function init {
   echo "Initializing..."
   echo "Pulling latest from git"
   git switch master
-  git pull origin master
+  git pull
   echo "Decrypting .env files"
   ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key
   ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key
@@ -92,7 +92,10 @@ function add_env {
 }
 
 function add_env_test {
+  date='date +"%d_%m_%Y"'
   read -p "Enter the new variable: " new_test_var
+  echo "Making new git branch"
+  git switch -c test_env_updated_$date
   echo $new_test_var >> ./env_test
   echo "New variable added on test!"
   sleep 1
@@ -139,10 +142,8 @@ function encrypt_and_upload {
   echo "Encrypting .env files"
   ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key
   ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key
-  echo "Making new git branch and pushing"
-  read -p "Name your new git branch: " NEW_GIT_BRANCH
+  echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
-  git switch -c $NEW_GIT_BRANCH
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
   git push --set-upstream origin $NEW_GIT_BRANCH
   git switch master
