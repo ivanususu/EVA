@@ -93,7 +93,7 @@ function add_env {
 
 function add_env_test {
   read -p "Enter the new variable: " new_test_var
-  DATETIME=`date +"%d_%m_%y-%H:%M:%S"`
+  DATETIME=`date +"%d%m%y_%H%M%S"`
   new_test_git_branch=test_env_updated_${DATETIME}
   echo "Making new git branch"
   git switch -c $new_test_git_branch
