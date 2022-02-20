@@ -1,10 +1,15 @@
 #!/bin/bash
+############################# VARIABLES ##################################
 ansible_test_key="/home/ivan/ansible_test_key"
+ansible_stage_key="/home/ivan/ansible_stage_key"
+git_work_dir="/home/ivan/variabler"
+env_path_test="/home/ivan/variabler/env_test"
+env_path_stage="/home/ivan/variabler/env_stage"
 
 ################################### CLEANUP FOR EXITS AND INTERUPT #############################################
 function cleanup() {
   echo "Cleaning up and exiting..."
-  cd /home/ivan/variabler ### MAKE VAR git_work_dir
+  cd $git_work_dir
   git switch master
   git restore .
   git branch | grep -v "master" | xargs git branch -D &> /dev/null
@@ -46,15 +51,15 @@ function main {
 }
 ################################### INITIALIZATION #############################################
 function init {
-  cd /home/ivan/variabler ### MAKE VAR
+  cd $git_work_dir
   echo "Initializing..."
   echo "Pulling latest from git"
   git switch master
   git pull
   git restore .
   echo "Decrypting .env files"
-  ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=$ansible_test_key ### MAKE VAR ansible_test_key
-  ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR ansible_stage_key
+  ansible-vault decrypt $env_path_test --vault-password-file=$ansible_test_key
+  ansible-vault decrypt $env_path_stage --vault-password-file=$ansible_stage_key
   sleep 1
   main
 }
@@ -88,14 +93,14 @@ function list_env {
 }
 function list_env_test {
   echo "-------------------------------------------"
-  cat ./env_test ### MAKE VAR
+  cat $env_path_test
   echo "-------------------------------------------"
   sleep 1
   main
 }
 function list_env_staging {
   echo "-------------------------------------------"
-  cat ./env_staging ### MAKE VAR
+  cat $env_path_stage
   echo "-------------------------------------------"
   sleep 1
   main
@@ -122,7 +127,7 @@ function add_env {
 
 function add_env_test {
   read -p "Enter the new variable: " new_test_var
-  echo $new_test_var >> ./env_test ### MAKE VAR
+  echo $new_test_var >> $env_path_test
   echo "New variable added on test!"
   echo "Don't forget to Encrypt and upload changes"
   sleep 1
@@ -130,7 +135,7 @@ function add_env_test {
 }
 function add_env_staging {
   read -p "Enter the new variable: " new_staging_var
-  echo $new_staging_var >> ./env_staging
+  echo $new_staging_var >> $env_path_stage
   echo "New variable added on staging!"
   sleep 1
   main
@@ -165,10 +170,10 @@ function remove_env_staging {
 }
 ################################### ENCRYPT AND UPLOAD #############################################
 function encrypt_and_upload {
-  cd /home/ivan/variabler ### MAKE VAR git_work_dir
+  cd $git_work_dir
   echo "Encrypting .env files"
-  ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR ansible_test_key
-  ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR ansible_stage_key
+  ansible-vault encrypt $env_path_test --vault-password-file=$ansible_test_key
+  ansible-vault encrypt $env_path_stage --vault-password-file=$ansible_stage_key
   echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
