@@ -13,10 +13,11 @@ function cleanup() {
 trap cleanup SIGINT SIGTERM ERR EXIT
 ################################### MAIN MENU #############################################
 function main {
-  echo " "
+  echo "-----------------------------------------------------------------"
   echo "Welcome to the Variabler!"
   echo "You must Initialize (1) to pull the latest changes from git"
   echo "To change the .env files you must first make a new git branch (2)"
+  echo "-----------------------------------------------------------------"
   echo "Choose operation:
     1.  Initialize
     2.  Create new git branch 
