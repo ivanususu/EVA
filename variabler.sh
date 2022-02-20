@@ -4,7 +4,7 @@ ansible_test_key="/home/ivan/ansible_test_key"
 ansible_stage_key="/home/ivan/ansible_stage_key"
 git_work_dir="/home/ivan/variabler"
 env_path_test="/home/ivan/variabler/env_test"
-env_path_stage="/home/ivan/variabler/env_stage"
+env_path_stage="/home/ivan/variabler/env_staging"
 
 ################################### CLEANUP FOR EXITS AND INTERUPT #############################################
 function cleanup() {
