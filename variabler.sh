@@ -1,9 +1,9 @@
 #!/bin/bash
-
-################################### CLEANUP FOR EXIT AND INTERUPT #############################################
+source config_variabler
+################################### CLEANUP FOR EXITS AND INTERUPT #############################################
 function cleanup() {
   echo "Cleaning up and exiting..."
-  cd /home/ivan/variabler ### MAKE VAR
+  cd /home/ivan/variabler ### MAKE VAR git_work_dir
   git switch master
   git restore .
   git branch | grep -v "master" | xargs git branch -D &> /dev/null
@@ -43,7 +43,7 @@ function main {
       break
     done
 }
-################################### 1) SELECT=init #############################################
+################################### INITIALIZATION #############################################
 function init {
   cd /home/ivan/variabler ### MAKE VAR
   echo "Initializing..."
@@ -52,12 +52,12 @@ function init {
   git pull
   git restore .
   echo "Decrypting .env files"
-  ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR
-  ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR
+  ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=$ansible_test_key ### MAKE VAR ansible_test_key
+  ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR ansible_stage_key
   sleep 1
   main
 }
-################################### 2) SELECT=create_git_branch;; #############################################
+################################### CREATING NEW GIT BRANCH #############################################
 function create_git_branch {  
   DATETIME=`date +"%d%m%y_%H%M%S"`
   new_test_git_branch=test_env_updated_${DATETIME}
@@ -66,7 +66,7 @@ function create_git_branch {
   main
 }
 
-################################### 3) SELECT=list_env;; #############################################
+################################### LISTING .ENV #############################################
 function list_env {
   echo "Choose environment:
     1.  Test
@@ -99,7 +99,7 @@ function list_env_staging {
   sleep 1
   main
 }
-################################### 4) SELECT=add_env;; #############################################
+################################### ADDING .ENV #############################################
 function add_env {
   echo "Choose environment:
     1.  Test
@@ -134,7 +134,7 @@ function add_env_staging {
   sleep 1
   main
 }
-################################### 5) SELECT=remove_env;; #############################################
+################################### REMOVE .ENV #############################################
 function remove_env {
   echo "Choose environment:
     1.  Test
@@ -162,12 +162,12 @@ function remove_env_staging {
   read -p "Variable to be removed: " remove_staging_var
 
 }
-################################### 6) SELECT=encrypt_and_upload;; #############################################
+################################### ENCRYPT AND UPLOAD #############################################
 function encrypt_and_upload {
-  cd /home/ivan/variabler ### MAKE VAR
+  cd /home/ivan/variabler ### MAKE VAR git_work_dir
   echo "Encrypting .env files"
-  ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR
-  ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR
+  ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR ansible_test_key
+  ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR ansible_stage_key
   echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
