@@ -63,6 +63,7 @@ function create_git_branch {
   new_test_git_branch=test_env_updated_${DATETIME}
   echo "Making new git branch"
   git switch -c $new_test_git_branch
+  main
 }
 
 ################################### 3) SELECT=list_env;; #############################################
