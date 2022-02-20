@@ -1,4 +1,17 @@
 #!/bin/bash
+
+################################### CLEANUP FOR EXIT AND INTERUPT #############################################
+function cleanup() {
+  echo "Cleaning up and exiting..."
+  cd /home/ivan/variabler ### MAKE VAR
+  git switch master
+  git restore .
+  git branch | grep -v "master" | xargs git branch -D &> /dev/null
+  exit
+}
+
+trap cleanup SIGINT SIGTERM ERR EXIT
+################################### MAIN MENU #############################################
 function main {
   echo " "
   echo "Welcome to the Variabler!"
@@ -36,9 +49,10 @@ function init {
   echo "Pulling latest from git"
   git switch master
   git pull
+  git restore .
   echo "Decrypting .env files"
-  ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key ### MAKE VAR
-  ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key ### MAKE VAR
+  ansible-vault decrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR
+  ansible-vault decrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR
   sleep 1
   main
 }
@@ -150,8 +164,8 @@ function remove_env_staging {
 function encrypt_and_upload {
   cd /home/ivan/variabler ### MAKE VAR
   echo "Encrypting .env files"
-  ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/variabler/ansible_test_key ### MAKE VAR
-  ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/variabler/ansible_stage_key ### MAKE VAR
+  ansible-vault encrypt /home/ivan/variabler/env_test --vault-password-file=/home/ivan/ansible_test_key ### MAKE VAR
+  ansible-vault encrypt /home/ivan/variabler/env_staging --vault-password-file=/home/ivan/ansible_stage_key ### MAKE VAR
   echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
