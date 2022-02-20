@@ -1,5 +1,6 @@
 #!/bin/bash
-source config_variabler
+ansible_test_key="/home/ivan/ansible_test_key"
+
 ################################### CLEANUP FOR EXITS AND INTERUPT #############################################
 function cleanup() {
   echo "Cleaning up and exiting..."
