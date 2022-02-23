@@ -169,7 +169,8 @@ function remove_env_test {
   echo "-------------------------------------------"
   echo "Enter the whole text from the line you want to remove"
   read -p "Variable to be removed: " remove_test_var
-  grep -v -xF "$remove_test_var" $env_path_test > $backup_dir$new_git_branch $$ cp $backup_dir$new_git_branch > $env_path_test
+  grep -v -xF "$remove_test_var" $env_path_test > $backup_dir$new_git_branch
+  cp $backup_dir$new_git_branch > $env_path_test
   sleep 1 
   main
 }
