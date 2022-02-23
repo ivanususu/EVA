@@ -20,7 +20,7 @@ trap cleanup SIGINT SIGTERM ERR EXIT
 ################################### MAIN MENU #############################################
 function main {
   echo "-----------------------------------------------------------------"
-  echo "Welcome to the Variabler!"
+  echo "Welcome to EVA!"
   echo "You must Initialize (1) to pull the latest changes from git"
   echo "To change the .env files you must first make a new git branch (2)"
   echo "-----------------------------------------------------------------"
@@ -162,11 +162,18 @@ function remove_env {
 }
 
 function remove_env_test {
+  echo "-------------------------------------------"
+  cat $env_path_test
+  echo "-------------------------------------------"
+  echo "Enter the whole text from the line you want to remove"
   read -p "Variable to be removed: " remove_test_var
-
+  sed -i "/^$remove_test_var\b/d" $env_path_test
+  sleep 1 
+  main
 }
 function remove_env_staging {
   read -p "Variable to be removed: " remove_staging_var
+  sed -i "/^$remove_staging_var\b/d" $env_path_stage
 
 }
 ################################### ENCRYPT AND UPLOAD #############################################
@@ -184,11 +191,12 @@ function encrypt_and_upload {
   main
 }
 
+################################### SEND MESSAGE TO SLACK #############################################
+#message="Hey someone just updated a .env file, check it out!"
+#curl -X POST -H 'Content-type: application/json' --data "{"text": "${message}"}" https://hooks.slack.com/services/12345/67890/abcdefghijklmnop
 
 
-
-# ... write a function for each possible value of $SELECT...
-
+#####################################
 main
 
 while test $? -eq 0; do
