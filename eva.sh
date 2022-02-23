@@ -68,7 +68,7 @@ function create_git_branch {
   DATETIME=`date +"%d%m%y_%H%M%S"`
   new_test_git_branch=env_updated_${DATETIME}
   echo "Making new git branch"
-  git switch -c $new_test_git_branch
+  git switch -c $new_git_branch
   sleep 1
   main
 }
@@ -138,6 +138,7 @@ function add_env_staging {
   read -p "Enter the new variable: " new_staging_var
   echo $new_staging_var >> $env_path_stage
   echo "New variable added on staging!"
+  echo "Don't forget to Encrypt and upload changes"
   sleep 1
   main
 }
@@ -172,9 +173,14 @@ function remove_env_test {
   main
 }
 function remove_env_staging {
+  echo "-------------------------------------------"
+  cat $env_path_stage
+  echo "-------------------------------------------"
+  echo "Enter the whole text from the line you want to remove"
   read -p "Variable to be removed: " remove_staging_var
   sed -i "/^$remove_staging_var\b/d" $env_path_stage
-
+  sleep 1 
+  main
 }
 ################################### ENCRYPT AND UPLOAD #############################################
 function encrypt_and_upload {
@@ -185,9 +191,9 @@ function encrypt_and_upload {
   echo "Pushing to git"
   read -p "Commit comment: " NEW_GIT_BRANCH_COMMENT
   git commit -am "$NEW_GIT_BRANCH_COMMENT"
-  git push --set-upstream origin $new_test_git_branch
+  git push --set-upstream origin $new_git_branch
   git switch master
-  git branch -D $new_test_git_branch
+  git branch -D $new_git_branch
   main
 }
 
