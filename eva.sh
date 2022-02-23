@@ -5,6 +5,7 @@ ansible_stage_key="/home/ivan/ansible_stage_key"
 git_work_dir="/home/ivan/variabler"
 env_path_test="/home/ivan/variabler/env_test"
 env_path_stage="/home/ivan/variabler/env_staging"
+backup_dir="/home/ivan/backup/"
 
 ################################### CLEANUP FOR EXITS AND INTERUPT #############################################
 function cleanup() {
@@ -168,7 +169,7 @@ function remove_env_test {
   echo "-------------------------------------------"
   echo "Enter the whole text from the line you want to remove"
   read -p "Variable to be removed: " remove_test_var
-  sed -i "/^$remove_test_var\b/d" $env_path_test
+  grep -v -xF "$remove_test_var" $env_path_test > $backup_dir/$new_test_git_branch $$ cp $backup_dir/$new_test_git_branch > $env_path_test
   sleep 1 
   main
 }
