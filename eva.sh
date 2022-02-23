@@ -67,7 +67,7 @@ function init {
 ################################### CREATING NEW GIT BRANCH #############################################
 function create_git_branch {  
   DATETIME=`date +"%d%m%y_%H%M%S"`
-  new_test_git_branch=env_updated_${DATETIME}
+  new_git_branch=env_updated_${DATETIME}
   echo "Making new git branch"
   git switch -c $new_git_branch
   sleep 1
